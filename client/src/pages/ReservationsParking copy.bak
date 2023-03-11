@@ -1,0 +1,1270 @@
+<template>
+  <q-page class="container full-width">
+    <div class="row q-px-sm q-py-xs full-width">
+      <div class="col-12 bg-white rounded-borders q-pa-none">
+        <q-btn
+          v-if="$q.screen.gt.xs"
+          outline
+          dense
+          no-wrap
+          icon="add"
+          no-caps
+          color="green"
+          label="Ajouter un visiteur parking"
+          class="q-mt-sm q-ml-sm q-pr-sm bg-white"
+          @click="add_new = true"
+        ></q-btn>
+        <q-btn-dropdown
+          outline
+          dense
+          color="primary"
+          icon="filter_list"
+          class="q-mt-sm q-ml-sm bg-white"
+          label="Selectionner un filtre"
+        >
+          <q-list>
+            <q-item clickable v-close-popup>
+              <q-item-section>
+                <q-item-label>Filter 1</q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <q-item clickable v-close-popup>
+              <q-item-section>
+                <q-item-label>Filter 2</q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <q-item clickable v-close-popup>
+              <q-item-section>
+                <q-item-label>Filter 3</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
+        <q-input
+          class="float-right items-center justify-center q-pa-xs bg-white"
+          v-model="searchValue"
+          label="Rechercher ici"
+          outlined
+          dense
+          style="width: 35%"
+          @input="doSearch"
+        >
+        </q-input>
+      </div>
+    </div>
+    <div class="row q-mt-xs bg-transparent rounded-borders full-width">
+      <!--   Demandes en attentes de validation par le service Parc Auto -->
+      <div class="col-4 q-px-xs">
+        <div class="q-pa-xs column-background">
+          <q-item class="q-pa-none text-white q-pa-sm to-do-title">
+            <q-item-section avatar style="min-width: 25px">
+              <q-icon name="taxi_alert" class="q-pa-none q-ma-none" />
+            </q-item-section>
+            <q-item-section class="text-h6 text-bold">
+              <span
+                ><q-avatar size="30px" color="teal-9" text-color="white">{{
+                  visiteursParking_en_attente.length
+                }}</q-avatar>
+                En attentes</span
+              >
+            </q-item-section>
+            <q-item-section avatar>
+              <q-icon name="more_vert" class="cursor-pointer">
+                <q-menu transition-show="rotate" transition-hide="rotate">
+                  <q-list style="min-width: 100px">
+                    <q-item clickable>
+                      <q-item-section>Aujoud'hui</q-item-section>
+                    </q-item>
+                    <q-item clickable>
+                      <q-item-section>A la date du</q-item-section>
+                    </q-item>
+                    <q-item clickable>
+                      <q-item-section>Toutes</q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
+              </q-icon>
+            </q-item-section>
+          </q-item>
+          <draggable
+            class="list-group"
+            :list="visiteursParking_en_attente"
+            group="tasks"
+            handle=".handle"
+            v-bind="dragOptions"
+            @start="fromAttente"
+            @end="toAttente"
+            @change="dragChange($event, visiteursParking_en_attente)"
+            ><!--@end="drag = false" :move="checkMoveAttente" :move="checkMoveAttente" @start="checkDragStart" @start="drag = true" 
+           @start="drag = true"
+            @end="drag = false"
+            -->
+            <q-card
+              v-for="(element, attente_index) in visiteursParking_en_attente"
+              v-bind:key="attente_index"
+              flat
+              bordered
+              class="
+                box-shadow
+                cursor-move
+                bg-white
+                q-mt-xs
+                list-group-item
+                border-todo
+              "
+              :style="
+                element.etat == 'attente'
+                  ? 'border-left: 5px solid red !important'
+                  : ''
+              "
+              ><!--  @mouseover="visiteur_index.attente_index = index"
+              @mouseleave="visiteur_index.attente_index = null"
+              -->
+
+              <q-toolbar
+                class="bg-transparent text-dark q-pa-none"
+                style="min-height: 10px"
+              >
+                <q-btn flat round dense icon="assignment_ind" />
+                <q-separator dark vertical inset />
+                <q-toolbar-title class="text-caption">
+                  {{ element.contactinterne }}
+                </q-toolbar-title>
+                <q-btn flat round dense icon="apps" class="q-mr-xs" />
+                <q-btn
+                  flat
+                  round
+                  dense
+                  icon="close"
+                  @click="
+                    deleteDemande('visiteursParking_en_attente', attente_index)
+                  "
+                />
+              </q-toolbar>
+              <!--<div class="row full-width no-wrap">
+                  <q-avatar
+                    class="q-pa-none"
+                    size="25px"
+                    dense
+                    :class="
+                      element.etat == 'attente'
+                        ? 'bug bottom-right-radius handle'
+                        : 'feature-to-do bottom-right-radius handle'
+                    "
+                    text-color="white"
+                  >
+                    <q-icon
+                      filled
+                      size="xs"
+                      :name="
+                        element.etat == 'attente'
+                          ? 'assignment'
+                          : 'directions_car_filled'
+                      "
+                    />
+                  </q-avatar>
+                  <span class="text-caption text-grey-9 q-ml-xs">
+                    #{{ element.immatriculation }}
+                    <q-btn
+                      flat
+                      size="xs"
+                      icon="close"
+                      class="q-pa-none float-right text-weight-bolder"
+                      @click="
+                        deleteDemande(
+                          'visiteursParking_en_attente',
+                          attente_index
+                        )
+                      "
+                    ></q-btn>
+                    <q-avatar class="float-right q-my-md" size="md">
+                      
+                      <q-icon name="directions_car_filled" size="20px"></q-icon>
+                    </q-avatar>
+                  </span>
+                </div>-->
+
+              <q-card-section class="q-pt-xs">
+                <div class="row items-center no-wrap">
+                  <div class="col">
+                    <div class="text-center text-caption">
+                      <span class="text-bold">Contact principal : </span
+                      >{{ element.prenom }} {{ element.nom }}
+                    </div>
+                    <div class="text-caption">
+                      <q-icon name="event" size="2vh" />
+                      <span>
+                        {{ element.datevisite }} - {{ element.heurevisite }}
+                      </span>
+                    </div>
+                    <div>
+                      <span class="text-bold">Passagers : </span
+                      >{{ getNbPassagers(element.passagers) }}
+                    </div>
+                    <div
+                      v-for="(elt, index) in element.passagers"
+                      :key="`at_passager_${index}`"
+                    >
+                      <span class="text-bold">
+                        <q-icon name="person" size="2vh" />
+                      </span>
+                      <span>
+                        {{ elt.nom }} {{ elt.prenom }}&nbsp;&nbsp;&nbsp;</span
+                      >
+                      <span class="text-bold">
+                        <q-icon name="warehouse" size="2vh" />
+                      </span>
+                      <span>{{ elt.societe }}</span>
+                    </div>
+                  </div>
+                </div>
+              </q-card-section>
+
+              <q-card-actions align="right" class="q-pa-none">
+                <q-btn
+                  size="md"
+                  flat
+                  round
+                  color="blue"
+                  icon="speaker_notes"
+                  @click="showDiagDetail(element)"
+                >
+                  <q-tooltip>Commentaires</q-tooltip>
+                </q-btn>
+                <!--<q-btn size="xs" dense filled round color="orange" icon="flag"/>showDiagPassagers(element.passagers)-->
+                <q-btn
+                  size="md"
+                  flat
+                  color="primary"
+                  icon="arrow_forward_ios"
+                  @click="
+                    currentCarIndex = attente_index;
+                    showAddParking = true;
+                  "
+                  ><q-tooltip> Ajouter au parking </q-tooltip></q-btn
+                >
+              </q-card-actions>
+            </q-card>
+          </draggable>
+        </div>
+      </div>
+
+      <!--   Demandes vehicules au parking -->
+      <div class="col-4 q-px-xs">
+        <div class="q-pa-xs column-background">
+          <q-item class="q-pa-none text-white q-pa-sm test-title">
+            <q-item-section avatar style="min-width: 25px">
+              <q-icon name="local_parking" class="q-pa-none q-ma-none" />
+            </q-item-section>
+            <q-item-section class="text-h6 text-weight-bolder"
+              >Au parking</q-item-section
+            >
+            <q-item-section avatar>
+              <q-icon name="more_vert" class="cursor-pointer">
+                <q-menu transition-show="rotate" transition-hide="rotate">
+                  <q-list style="min-width: 100px">
+                    <q-item clickable>
+                      <q-item-section>Aujoud'hui</q-item-section>
+                    </q-item>
+                    <q-item clickable>
+                      <q-item-section>A la date du</q-item-section>
+                    </q-item>
+                    <q-item clickable>
+                      <q-item-section>Toutes</q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
+              </q-icon>
+            </q-item-section>
+          </q-item>
+          <draggable
+            class="list-group"
+            :list="visiteursParking_au_parking"
+            group="tasks"
+            v-bind="dragOptions"
+            @start="fromParking"
+            @end="toParking"
+            @change="dragChange($event, visiteursParking_au_parking)"
+          >
+            <q-card
+              square
+              v-for="(element, parking_index) in visiteursParking_au_parking"
+              v-bind:key="parking_index"
+              flat
+              bordered
+              class="
+                box-shadow
+                cursor-move
+                bg-white
+                q-mt-xs
+                list-group-item
+                border-test
+              "
+              :style="
+                element.etat == 'parking'
+                  ? 'border-left: 5px solid green !important'
+                  : ''
+              "
+            >
+              <q-avatar
+                class="q-pa-none"
+                size="25px"
+                dense
+                :class="
+                  element.etat == 'parking'
+                    ? 'bug bottom-right-radius bg-green'
+                    : 'feature-test bottom-right-radius'
+                "
+                text-color="white"
+              >
+                <q-icon
+                  filled
+                  size="xs"
+                  :name="
+                    element.etat == 'parking'
+                      ? 'taxi_alert'
+                      : 'directions_car_filled'
+                  "
+                />
+              </q-avatar>
+              <span class="text-caption text-grey-9 q-ml-xs">
+                #{{ element.immatriculation }}
+                <q-btn
+                  :ref="`attBtn_${parking_index}`"
+                  flat
+                  size="xs"
+                  icon="close"
+                  class="float-right text-weight-bolder"
+                  @click="deleteDemande('task_test', parking_index)"
+                /><!-- :style="{'visibility':index==visiteur_index.parking_index?'visible':'hidden'}" -->
+                <q-avatar class="float-right q-my-md" size="md">
+                  <q-icon name="directions_car_filled" size="20px"></q-icon>
+                </q-avatar>
+              </span>
+              <q-card-section class="q-pt-sm">
+                <div class="row items-center no-wrap">
+                  <div class="col">
+                    <div class="text-caption">
+                      <span class="text-bold">Demandeur : </span
+                      >{{ element.contactinterne }}
+                    </div>
+                    <div class="text-caption">
+                      <span class="text-bold">Passagers : </span
+                      >{{ getNbPassagers(element.passagers) }}
+                    </div>
+                    <div
+                      class="text-caption"
+                      v-for="(elt, index) in element.passagers"
+                      :key="`at_passager_${index}`"
+                    >
+                      <span class="text-bold">Passagers : {{ elt.nom }}</span>
+                    </div>
+                  </div>
+                </div>
+              </q-card-section>
+              <q-badge
+                outline
+                v-bind:key="index"
+                class="q-mx-xs text-bold tag-badge tag-badge"
+                v-for="(tag, index) in element.tags"
+                :color="tag.color"
+                >{{ tag.name }}
+              </q-badge>
+              <q-card-actions>
+                <q-btn
+                  size="xs"
+                  dense
+                  filled
+                  round
+                  color="blue"
+                  icon="message"
+                />
+                <q-btn
+                  size="xs"
+                  dense
+                  filled
+                  round
+                  color="orange"
+                  icon="flag"
+                />
+                <q-btn
+                  size="xs"
+                  dense
+                  filled
+                  round
+                  color="grey"
+                  icon="attachment"
+                />
+              </q-card-actions>
+            </q-card>
+          </draggable>
+        </div>
+      </div>
+      <!--   Vehicules quittant le parking -->
+      <div class="col-4 q-px-xs">
+        <div class="q-pa-xs column-background">
+          <q-item class="q-pa-none text-white q-pa-sm done-title">
+            <q-item-section avatar style="min-width: 25px">
+              <q-icon name="exit_to_app" class="q-pa-none q-ma-none" />
+            </q-item-section>
+            <q-item-section class="text-h6 text-weight-bolder"
+              >Sont Partis</q-item-section
+            >
+            <q-item-section avatar>
+              <q-icon name="more_vert" class="cursor-pointer">
+                <q-menu transition-show="rotate" transition-hide="rotate">
+                  <q-list style="min-width: 100px">
+                    <q-item clickable>
+                      <q-item-section>Aujoud'hui</q-item-section>
+                    </q-item>
+                    <q-item clickable>
+                      <q-item-section>A la date du</q-item-section>
+                    </q-item>
+                    <q-item clickable>
+                      <q-item-section>Toutes</q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-menu>
+              </q-icon>
+            </q-item-section>
+          </q-item>
+          <draggable
+            class="list-group"
+            :list="visiteursParking_sortis"
+            group="tasks"
+            v-bind="dragOptions"
+            @start="fromSortie"
+            @end="toSortie"
+            @change="dragChange($event, visiteursParking_sortis)"
+          >
+            <q-card
+              square
+              v-for="(element, sortis_index) in visiteursParking_sortis"
+              v-bind:key="sortis_index"
+              flat
+              bordered
+              class="
+                box-shadow
+                cursor-move
+                bg-white
+                q-mt-xs
+                list-group-item
+                border-done
+              "
+              :style="
+                element.etat == 'sorti'
+                  ? 'border-left: 5px solid red !important'
+                  : ''
+              "
+            >
+              <q-avatar
+                class="q-pa-none"
+                size="25px"
+                dense
+                :class="
+                  element.etat == 'sorti'
+                    ? 'bug bottom-right-radius'
+                    : 'feature-done bottom-right-radius'
+                "
+                text-color="white"
+              >
+                <q-icon
+                  filled
+                  size="xs"
+                  :name="element.etat == 'sorti' ? 'bug_report' : 'assignment'"
+                />
+              </q-avatar>
+              <span class="text-caption text-grey-9 q-ml-xs">
+                #{{ element.immatriculation }}
+                <q-icon
+                  filled
+                  size="xs"
+                  name="close"
+                  class="float-right text-weight-bolder"
+                  @click="deleteDemande('task_done', sortis_index)"
+                />
+                <q-avatar class="float-right q-my-md" size="md">
+                  <q-icon name="directions_car_filled" size="20px"></q-icon>
+                </q-avatar>
+              </span>
+              <q-card-section class="q-pt-sm">
+                <div class="row items-center no-wrap">
+                  <div class="col">
+                    <div class="text-caption">
+                      <span class="text-bold">Demandeur : </span
+                      >{{ element.contactinterne }}
+                    </div>
+                    <div class="text-caption">
+                      <span class="text-bold">Passagers : </span>
+                    </div>
+                  </div>
+                </div>
+              </q-card-section>
+              <q-badge
+                outline
+                v-bind:key="index"
+                class="q-mx-xs text-bold tag-badge tag-badge"
+                v-for="(tag, index) in element.tags"
+                :color="tag.color"
+                >{{ tag.name }}
+              </q-badge>
+              <q-card-actions>
+                <q-btn
+                  size="xs"
+                  dense
+                  filled
+                  round
+                  color="blue"
+                  icon="message"
+                />
+                <q-btn
+                  size="xs"
+                  dense
+                  filled
+                  round
+                  color="orange"
+                  icon="flag"
+                />
+                <q-btn
+                  size="xs"
+                  dense
+                  filled
+                  round
+                  color="grey"
+                  icon="attachment"
+                />
+              </q-card-actions>
+            </q-card>
+          </draggable>
+        </div>
+      </div>
+    </div>
+    <q-dialog v-model="showAddParking" position="left">
+      <q-card style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Arrive au parking</div>
+        </q-card-section>
+        <q-separator />
+        <q-card-section class="row items-center no-wrap">
+          <q-form class="q-gutter-md full-width">
+            <q-input
+              filled
+              v-model="immatriculation"
+              label="Immatriculation"
+              class="q-ml-none"
+            />
+
+            <!--<q-input filled v-model="task_item.task_type" label="Last Name" class="q-ml-none"/>-->
+
+            <div class="text-right">
+              <q-btn
+                label="Annuler"
+                @click="cancelAttenteChanges"
+                color="primary"
+              />
+              <q-btn
+                @click="addParkingChanges"
+                style="width: 90px"
+                class="q-ml-sm"
+                label="Ajouter"
+                color="green"
+              />
+            </div>
+          </q-form>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+    <q-dialog v-model="showDelete" position="top">
+      <q-card style="width: 300px">
+        <q-card-section>
+          <div class="text-h6 text-center">
+            Confirmer vous cette suppression ?
+          </div>
+        </q-card-section>
+        <q-separator />
+        <q-card-section class="row items-center no-wrap">
+          <q-form class="q-gutter-md full-width">
+            <div class="text-right q-gutter-md">
+              <q-btn
+                @click="showDelete = false"
+                label="NON"
+                color="primary"
+                icon="cancel"
+              />
+              <q-btn
+                @click="confirmDelete"
+                label="OUI"
+                icon="done"
+                color="green"
+              />
+            </div>
+          </q-form>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+    <q-dialog v-model="showDetails">
+      <q-card class="container row full-width">
+        <q-card-section>
+          <div class="text-h6 text-center">Détails de la demande parking</div>
+        </q-card-section>
+        <q-separator />
+        <q-card-section class="row items-center no-wrap">
+          <f-vv-form-by-name
+            :fieldsmodel="currentDemande"
+            :nameForm="'Demande Parking'"
+            :showSave="true"
+            :saveLabel="'Modifier'"
+            @onFormAdded="editFormDatas"
+          ></f-vv-form-by-name>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+    <!--<q-dialog v-model="add_new" position="left">
+      <q-card style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Add New Task</div>
+        </q-card-section>
+        <q-separator/>
+        <q-card-section class="row items-center no-wrap">
+          <q-form class="q-gutter-md full-width">
+            <q-input filled v-model="task_item.task_title" label="First Name" class="q-ml-none"/>
+
+            <q-input filled v-model="task_item.task_type" label="Last Name" class="q-ml-none"/>
+
+            <div class="text-right">
+              <q-btn @click="add_new=false" label="Annuler" type="submit" color="primary"/>
+              <q-btn
+                @click="addNewTask"
+                style="width: 90px"
+                class="q-ml-sm"
+                label="Ajouter"
+                type="submit"
+                color="green"
+              />
+            </div>
+          </q-form>
+        </q-card-section>
+      </q-card>
+    </q-dialog>-->
+  </q-page>
+</template>
+
+<script>
+import Vue from 'vue';
+
+import { mapState, mapActions } from 'vuex';
+
+import { colors, QSpinnerGears, QSpinnerPie } from 'quasar';
+
+import draggable from 'vuedraggable';
+
+import { Notify,date  } from 'quasar';
+
+import FVvFormByName from '../components/FVvFormByName.vue';
+
+Vue.component('draggable', draggable);
+
+export default {
+  components: { FVvFormByName },
+  name: 'ReservationsParking',
+  data() {
+    return {
+      search: '',
+      searchValue: '',
+      filters: {},
+      fromCol: null,
+      toCol: null,
+      vparking: [],
+      sparking: [],
+      visiteursParking: [],
+      showAddParking: false,
+      showDelete: false,
+      showDetails: false,
+      showPassagers: false,
+      currentDemande: {},
+      currentCarIndex: null,
+      customFilter: [],
+      changes: [],
+      deleteCar: [],
+      deletCarIndex: null,
+      immatriculation: '',
+      currentElement: {
+        immatriculation: '',
+      },
+      visiteur_index: {
+        attente_index: null,
+        sortis_index: null,
+        parking_index: null,
+      },
+      task_index: {
+        to_do_index: null,
+        in_progress_index: null,
+        test_index: null,
+        done_index: null,
+      },
+      add_new: false,
+      drag: false,
+    };
+  },
+  computed: {
+    currentUsername() {
+      console.log('Root :', this.$store);
+      return this.$store.state.auth.user.sAMAccountName;
+    },
+    dragOptions() {
+      return {
+        animation: 200,
+        group: 'description',
+        disabled: false,
+        ghostClass: 'ghost',
+      };
+    },
+    ...mapState('admin', {
+      formData: (state) => state.getform,
+      fconfig: (state) => state.config,
+      visiteurs: (state) => state.visiteurs,
+      vParking: (state) => state.visiteursParking
+    }),
+    totalVisiteurs() {
+      if (!this.visiteursParking || !Array.isArray(this.visiteursParking))
+        return;
+      return this.visiteursParking.filter(
+        (elt) => elt.datevisite == this.datedujour && elt.etat != 'attente'
+      ).length;
+    },
+    totalRdcVisiteurs() {
+      if (!this.visiteurs || !Array.isArray(this.visiteurs)) return;
+      return this.visiteurs.filter(
+        (elt) => elt.datevisite == this.datedujour && elt.typeacces == 'RDC'
+      ).length;
+    },
+    totalParkingVisiteurs() {
+      if (!this.visiteursParking || !Array.isArray(this.visiteursParking))
+        return;
+      return this.visiteursParking.filter(
+        (elt) =>
+          elt.datevisite == this.datedujour &&
+          elt.typeacces == 'PARKING' &&
+          elt.etat != 'attente'
+      ).length;
+    },
+    visiteursParking_en_attente() {
+      if (!this.visiteursParking || !Array.isArray(this.visiteursParking))
+        return;
+     
+      return this.visiteursParking.filter(
+        (elt) => elt.typeacces == 'PARKING' && elt.etat == 'attente'
+      );
+    },
+    visiteursParking_reserve() {
+      if (!this.visiteursParking || !Array.isArray(this.visiteursParking))
+        return;
+      return this.visiteursParking.filter(
+        (elt) => elt.typeacces == 'PARKING' && elt.etat == 'reserve'
+      );
+    },
+    visiteursParking_sortis() {
+      if (!this.visiteursParking || !Array.isArray(this.visiteursParking))
+        return;
+      return this.visiteursParking.filter(
+        (elt) => elt.typeacces == 'PARKING' && elt.etat == 'sortis'
+      );
+    },
+    visiteursParking_au_parking() {
+      if (!this.visiteursParking || !Array.isArray(this.visiteursParking))
+        return;
+      return this.visiteursParking.filter(
+        (elt) => elt.typeacces == 'PARKING' && elt.etat == 'parking'
+      );
+    },
+    /*visiteursParking() {
+        return this.vParking.filter(
+        data => Object.values(data).some(val=> val.toLowerCase().indexOf(this.searchValue.toLowerCase()) !== -1)
+      )
+    },*/
+  },
+  methods: {
+    ...mapActions('admin', [
+      'getAllVisiteurs',
+      'addVisiteur',
+      'getForm',
+      'saveForm',
+      'getConfig',
+      'writeConfig',
+    ]),
+    
+    globalSearch(arrayobj, text) {
+      
+      const columns = Object.keys(arrayobj[0]);
+      const filteredData = arrayobj.filter(
+        data => Object.values(data).some(val=> val.toLowerCase().indexOf(text.toLowerCase()) !== -1)
+      )
+        
+      console.log('Recherche :',filteredData)
+      return filteredData
+    },
+    doSearch(val) {
+      console.log('Rechercehe :',val)
+      this.visiteursParking = Object.assign([],this.vParking.filter(
+        data => Object.values(data).some(val=> val.toLowerCase().indexOf(this.searchValue.toLowerCase()) !== -1)
+      ));
+    },
+    /**
+     * Filters an array of objects using custom predicates.
+     *
+     * @param  {Array}  array: the array to filter
+     * @param  {Object} filters: an object with the filter criteria
+     * @return {Array}
+     */
+    filterArray(array, filters) {
+      const filterKeys = Object.keys(filters);
+      return array.filter((item) => {
+        // validates all filter criteria
+        return filterKeys.every((key) => {
+          // ignores non-function predicates
+          if (typeof filters[key] !== 'function') return true;
+          return filters[key](item[key]);
+        });
+      });
+    },
+    whereDateYearEq(annee) {
+      return (item) => item.split('/')[2] === annee;
+    },
+    whereDateMonthrEq(mois) {
+      return (item) => item.split('/')[1] === mois;
+    },
+    whereDateDayEq(jour) {
+      return (item) => item.split('/')[0] === jour;
+    },
+    whereContain(value) {
+      return (item) =>
+        String(item).toLowerCase().indexOf(value.toLowerCase()) != -1;
+    },
+    whereDateBetween(date1, date2) {
+      return (item) =>
+        date.isBetweenDates(
+          new Date(item.split('/')[2], item.split('/')[1], item.split('/')[0]),
+          new Date(
+            date1.split('/')[2],
+            date1.split('/')[1],
+            date1.split('/')[0]
+          ),
+          new Date(
+            date2.split('/')[2],
+            date2.split('/')[1],
+            date2.split('/')[0]
+          ),
+          { onlyDate: true, inclusiveFrom: true, inclusiveTo: true }
+        );
+    },
+    whereDateDuJour(datej) {
+      let cdate = new Date(
+        datej.split('/')[2],
+        datej.split('/')[1],
+        datej.split('/')[0]
+      );
+      return (item) =>
+        date.isSameDate(
+          new Date(item.split('/')[2], item.split('/')[1], item.split('/')[0]),
+          cdate
+        );
+    },
+    whereTypeAcces(acces) {
+      return (item) => String(item).trim() == acces;
+    },
+    filterColumn(val) {
+      console.log('Filter data :', this.searchValue);
+      console.log('Value :', val);
+      console.log(
+        'Donnees :',
+        this.vparking.filter(
+          (row) =>
+            String(row[Object.keys(this.searchValue)[0]]).indexOf(val) != -1
+        )
+      );
+      const fdata = Object.entries(this.searchValue).map(([key, value]) => ({
+        key,
+        value,
+      }));
+      console.log('Donnees :', fdata);
+      fdata.forEach((elt) => {
+        this.filters[elt.key] = this.whereContain(elt.value);
+      });
+      this.customFilter = this.filterArray(this.vparking, this.filters);
+
+      // Object.assign([],this.ldata.filter(row => this.filter_data.every(val => String(row[Object.keys(this.filter_data)[0]]).indexOf(val)!=-1)))
+    },
+    /**
+     *  delete filter
+     */
+    deleteFilters(objScope, headerToFiltre) {
+      this.filters[`${headerToFiltre}`] = '';
+      this.customFilter = this.filterArray(this.vparking, this.filters);
+      this.filtersParams[`${headerToFiltre}`].value = '';
+      //this.$refs[`filter_${headerToFiltre}`].cancel()
+      objScope.set();
+    },
+    dragChange(event, list) {
+      console.log('Demande Parking event :', event);
+      console.log('Demande Parking Liste :', list);
+      console.log('Demande Liste globale :', this.vparking);
+
+      this.changes.push({
+        event,
+        list,
+      });
+      if (event.removed) {
+        // event.removed.element.immatriculation = this.immatriculation;
+        console.log('Demande Parking  event removed :', event.removed);
+        console.log('Deplacement depuis :', this.fromCol);
+        console.log('Deplacement vers :', this.toCol);
+        if (this.fromCol == 'Attente' && this.toCol == 'Parking') {
+          this.currentCarIndex = event.removed.oldIndex;
+          this.showAddParking = true;
+        }
+      }
+      if (event.moved) {
+        console.log('Demande Parking  event moved :', event.moved);
+        console.log('Deplacement depuis :', this.fromCol);
+        console.log('Deplacement vers :', this.toCol);
+      }
+
+      if (event.added) {
+        console.log('Demande Parking  event added :', event.added);
+        console.log('Deplacement depuis :', this.fromCol);
+        console.log('Deplacement vers :', this.toCol);
+        //list[event.added.newIndex].etat = 'attente'
+      }
+    },
+    fromAttente(event) {
+      console.log('De demande en Attente :', event);
+      this.fromCol = 'Attente';
+    },
+    fromParking(event) {
+      console.log('De demande au Parking :', event);
+      this.fromCol = 'Parking';
+    },
+    fromSortie(event) {
+      console.log('De demande en Sortie :', event);
+      this.fromCol = 'Sortie';
+    },
+    toAttente(event) {
+      console.log('Vers demande en Attente :', event);
+      this.toCol = 'Attente';
+    },
+    toParking(event) {
+      console.log('Vers demande au Parking :', event);
+      this.toCol = 'Parking';
+    },
+    toSortie(event) {
+      console.log('Vers demande en Sortie :', event);
+      this.toCol = 'Sortie';
+    },
+    addParkingChanges() {
+      if (this.immatriculation != '') {
+        console.log('Parking Liste :', this.vparking);
+        console.log('Element Index :', this.currentCarIndex);
+        this.changes = [];
+        this.vparking[this.currentCarIndex].immatriculation =
+          this.immatriculation;
+        this.vparking[this.currentCarIndex].etat = 'parking';
+        this.showAddParking = false;
+      } else {
+        this.cancelAttenteChanges();
+      }
+    },
+
+    cancelAttenteChanges() {
+      this.changes.forEach(({ event, list }) => {
+        console.log('Liste :', list);
+        this.vparking = Object.assign([], list);
+        console.log('Element event :', event);
+        if (event.added) {
+          console.log('Element to add :', event.added);
+          let { newIndex } = event.added;
+          list.splice(newIndex, 1);
+        }
+
+        if (event.removed) {
+          console.log('Element to remove :', event.removed);
+          let { oldIndex, element } = event.removed;
+          console.log('Liste before:', list);
+          list.splice(oldIndex, 0, element);
+          console.log('Liste after:', list);
+        }
+
+        if (event.moved) {
+          console.log('Element to move :', event.moved);
+          let { newIndex, oldIndex, element } = event.moved;
+          list[newIndex] = list[oldIndex];
+          list[oldIndex] = element;
+        }
+      });
+
+      this.changes = [];
+      this.showAddParking = false;
+    },
+    checkDragStart(evt) {
+      console.log('Element à deplacer :', evt);
+      //this.showAddParking = true;
+      this.$q
+        .dialog({
+          dark: true,
+          title: 'Prompt',
+          message: "Quel est l'immatriculation ?",
+          prompt: {
+            model: '',
+            type: 'text', // optional
+          },
+          cancel: true,
+          persistent: true,
+        })
+        .onOk((data) => {
+          console.log('>>>> OK, received', data);
+          if (data) {
+            console.log('immatriculé');
+            this.immatriculation = data; //this.drag = true
+            return true;
+          } else {
+            this.drag = false;
+            return false;
+          }
+        })
+        .onCancel(() => {
+          // console.log('>>>> Cancel')
+          return false;
+        })
+        .onDismiss(() => {
+          // console.log('I am triggered on both OK and Cancel')
+          //return false;
+        });
+
+      // return true;
+    },
+    checkDragEnd(evt) {
+      console.log('Element deplacer :', evt);
+      return true;
+    },
+    checkMoveParking(evt) {
+      console.log('Element moved :', evt.draggedContext.element);
+    },
+    checkMoveAttente(evt) {
+      console.log('Move Element Attente event :', evt);
+      //evt.draggedContext.element.immatriculation = this.immatriculation;
+      //console.log('Move Element Attente move :', evt.draggedContext.element);
+      //this.currentElement = Object.assign({},evt.draggedContext)
+
+      return true;
+    },
+    getNbPassagers(p) {
+      //const p = Object.assign([],passagers)
+      return Array(p).length;
+    },
+    getPassagers(p) {
+      let pp = [];
+      for (let index = 0; Array(p).length; index++) {
+        const element = p[index];
+
+        pp.push({ nom: element.nom, prenom: element.prenom });
+      }
+      console.log('Passagers :', pp);
+      return pp;
+    },
+    addNewTask() {
+      let max_id = Math.max.apply(
+        Math,
+        this.task_to_do.map(function (o) {
+          return o.id;
+        })
+      );
+      this.task_item.id = max_id + 1;
+      this.task_to_do.push(this.task_item);
+      this.add_new = false;
+      this.$q.notify({
+        type: 'positive',
+        message: `The new task is added successfully.`,
+      });
+    },
+    deleteDemande(demandeParking, index) {
+      console.log('Demande parking à supprimer :', demandeParking);
+      console.log(
+        'demande reelle à supprimer id :',
+        this[demandeParking][index]._id
+      );
+      this.showDelete = true;
+      this.deleteCar = this[demandeParking];
+      this.deletCarIndex = index;
+    },
+    confirmDelete() {
+      this.deleteCar.splice(this.deletCarIndex, 1);
+      this.showDelete = false;
+    },
+    showDiagDetail(infos) {
+      this.currentDemande = Object.assign({}, infos);
+      this.showDetails = true;
+    },
+    showDiagPassagers(pinfos) {
+      this.currentPassagers = Object.assign({}, pinfos);
+      this.showPassagers = true;
+    },
+    editFormDatas(fields) {
+      console.log('Données à modifier :', fields);
+      this.showDetails = false;
+    },
+  },
+  async mount() {
+    
+    
+    console.log('Les visiteurs parking:', this.visiteursParking);
+    console.log('Search value :',this.searchValue)
+    
+  },
+  async beforeMount() {
+    this.$q.loading.show({
+      spinner: QSpinnerGears,
+      spinnerColor: 'red',
+      message: 'Chargement en cours...',
+    });
+    
+    await this.getAllVisiteurs();
+    this.visiteursParking = Object.assign([],this.vParking.filter(
+        data => Object.values(data).some(val=> val.toLowerCase().indexOf(this.searchValue.toLowerCase()) !== -1)
+      ));
+    
+    this.$q.loading.hide();
+   
+    
+
+
+  },
+  watch: {
+    searchValue(val) {
+      if (val) {
+      this.visiteursParking = this.vParking.filter(
+        data => Object.values(data).some(val=> val.toLowerCase().indexOf(val.toLowerCase()) !== -1)
+      )
+      }
+    }
+  },
+};
+</script>
+
+<style scoped>
+.button {
+  margin-top: 35px;
+}
+
+.flip-list-move {
+  transition: transform 0.5s;
+}
+
+.no-move {
+  transition: transform 0s;
+}
+
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+
+.list-group {
+  min-height: 100vh;
+}
+
+.list-group-item {
+  cursor: move;
+}
+
+.list-group-item i {
+  cursor: pointer;
+}
+
+.cursor-move {
+  cursor: move;
+}
+
+.border-todo {
+  border-left: 5px solid #2fbb91 !important;
+}
+
+.feature-to-do {
+  background-color: #2fbb91;
+}
+
+.to-do-title {
+  background-color: rgb(47, 187, 145);
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+.border-in-progress {
+  border-left: 5px solid #ee9835 !important;
+}
+
+.feature-in-progress {
+  background-color: #ee9835;
+}
+
+.in-progress-title {
+  background-color: #ee9835;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+.border-test {
+  border-left: 5px solid blueviolet !important;
+}
+
+.feature-test {
+  background-color: blueviolet;
+}
+
+.test-title {
+  background-color: blueviolet;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+.border-done {
+  border-left: 5px solid green !important;
+}
+
+.feature-done {
+  background-color: green;
+}
+
+.done-title {
+  background-color: green;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+.to-do-title {
+  background-color: rgb(47, 187, 145);
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.bottom-right-radius {
+  border-bottom-right-radius: 4px !important;
+}
+
+.tag-badge {
+  border: 1px solid currentColor !important;
+  border-radius: 4px !important;
+}
+
+.bug {
+  background-color: red;
+}
+
+.box-shadow:hover {
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px rgba(0, 0, 0, 0.14),
+    0 1px 10px rgba(0, 0, 0, 0.12) !important;
+}
+.q-dialog__inner--minimized > div {
+  max-width: calc(100vh - 48px);
+}
+</style>

@@ -1,0 +1,56 @@
+version: '3.3'
+services:   
+    cacem-srv:
+      image: vevedh/phasme-srv:latest
+      hostname: vvdecha-smb
+      extra_hosts:
+        - vvdecha-smb.agglo.local vvdecha-smb:127.0.0.1
+
+      depends_on:
+        - mongo
+      ports:
+        - "137:137"
+        - "138:138"
+        - "139:139"
+        - "4445:445"
+        - "443:443"
+        - "80:80"
+        - "3030:3030"
+      networks:
+        - dbnet
+      environment:
+        - TZ=America/Martinique
+        - IP_ADDRESS=172.30.151.1
+        - DOMAIN_NAME=agglo.local
+        - ADMIN_SERVER=dc11.agglo.local
+        - MONGODB_URL=mongodb://admcacem:Cacem972@mongo:27017/cacemdb?authSource=admin
+        - MONGO_BASENAME=cacemdb
+        - WORKGROUP=agglo
+        - AD_USERNAME=hdechavignyadm
+        - AD_PASSWORD=d@nZel!77
+        - CHOKIDAR_USEPOLLING=true
+      volumes:
+        - ./srv:/srv
+        - ./client/www:/srv/www
+      labels:
+        - "com.docker.compose.project.working_dir=/phasme-srv"
+
+    mongo:
+      image: mongo:latest
+      expose:
+        - 27019
+      ports:
+        - 27019:27017
+      networks:
+        - dbnet
+      environment:
+        MONGO_INITDB_ROOT_USERNAME: admcacem
+        MONGO_INITDB_ROOT_PASSWORD: Cacem972    
+      volumes:
+        - ./srv/mongod.conf:/etc/mongod.conf
+        - ./data/mongo/data:/data/db
+      labels:
+        - "com.docker.compose.project.working_dir=/phasme-srv"
+
+networks:
+  dbnet:

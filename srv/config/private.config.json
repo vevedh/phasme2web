@@ -1,0 +1,7 @@
+{
+  "siteUrl": "http://svrsharepoint3",
+  "strategy": "OnpremiseUserCredentials",
+  "username": "spadmin",
+  "domain": "AGGLO",
+  "password": "5dd4dc9aba2417d7351ef636704110c3644b4bb6563ed0247686367f6683443360debad988703d735d7d7bdb4e0ad1b0mHhbNmIjcM4PE+o3O/5vvw=="
+}

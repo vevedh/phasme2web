@@ -1,0 +1,38 @@
+{
+  "type": "object",
+  "title": "Newsletter Subscription",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 80,
+      "attrs": {
+        "type": "text",
+        "label": "Nom complet",
+        "filled": true,
+        "placeholder": "Full Name"
+      }
+    },
+    "email": {
+      "type": "string",
+      "maxLength": 120,
+      "attrs": {
+        "label": "Adresse email",
+        "type": "email",
+        "filled": true,
+        "placeholder": "Email"
+      }
+    },
+    "date": {
+      "type": "string",
+      "attrs": {
+        "label": "Date de debut"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "name",
+    "email"
+  ]
+}

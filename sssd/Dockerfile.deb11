@@ -1,0 +1,206 @@
+# Docker image file that describes an Debian image with PowerShell installed from Microsoft APT Repo
+ARG imageRepo=debian
+
+FROM ${imageRepo}:bullseye-slim
+#FROM debian:stable
+
+COPY pwrshell /opt/pwrshell
+
+# Install system components
+RUN apt-get update  && apt-get install -y wget lsb-release curl gnupg apt-transport-https
+
+RUN echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" |  tee /etc/apt/sources.list.d/sury-php.list
+
+
+RUN wget -qO - https://packages.sury.org/php/apt.gpg | apt-key add -
+
+
+RUN apt-get -y update
+
+# Import the public repository GPG keys
+RUN curl https://packages.microsoft.com/keys/microsoft.asc |  apt-key add -
+
+RUN apt-get update && apt-get -y --no-install-recommends  install php8.0 php8.0-mysql php8.0-cli php8.0-common php8.0-imap php8.0-ldap php8.0-xml php8.0-fpm php8.0-curl php8.0-mbstring php8.0-zip apache2 libapache2-mod-php  libldap2-dev php-ldap ldap-utils python-dev sasl2-bin libsasl2-2 libsasl2-modules libsasl2-modules-gssapi-mit libsasl2-dev gcc
+
+# Register the Microsoft Product feed
+RUN sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-bullseye-prod bullseye main" > /etc/apt/sources.list.d/microsoft.list'
+
+# Install PowerShell
+RUN apt-get update && apt-get install -y powershell
+
+RUN sh -c "yes | pwsh -Command 'Install-Module -Name PSWSMan'"
+RUN pwsh -Command 'Install-WSMan'
+
+ENV TERM=xterm
+
+ENV DEBIAN_FRONTEND noninteractive
+
+
+RUN apt-get -y update && \
+    apt-get -y  --no-install-recommends install \
+        dnsutils \
+        vim \
+        nano \
+        crudini \
+        dbus \
+        realmd \
+        krb5-kdc \
+        krb5-admin-server \
+        krb5-user \
+        libkrb5-dev \
+        libpam-krb5 \
+        libpam-ccreds \
+        adcli \
+        winbind \
+        libnss-winbind \
+        libpam-winbind \
+        samba \
+        samba-dsdb-modules \
+        samba-client \
+        samba-common-bin \
+        oddjob oddjob-mkhomedir \
+        samba-vfs-modules \
+        logrotate \
+        attr \
+        libpam-mount \
+        policykit-1 \
+        packagekit \
+        sssd \
+        sssd-tools \
+        libnss-sss \
+        libnss3-tools \
+        libpam-sss \
+        libnss-ldap \
+        inetutils-ping \
+        rdate \
+        acl \
+        gnupg apt-transport-https \
+        gss-ntlmssp \
+        supervisor 
+
+
+
+# Install les packages necessaires
+RUN apt-get update && apt-get install -y locales \
+    git \
+    wget \
+    gnupg \
+    unzip \
+    zip \
+    bzip2 \
+    tar \
+    vim \
+    telnet \
+    net-tools \
+    inetutils-ping \
+    traceroute \
+    openssh-server \
+    sendmail \
+    alien \
+    cron g++ gettext libicu-dev openssl \
+    libc-client-dev libkrb5-dev  libmcrypt-dev libldap-common libldap2-dev \
+    libxml2-dev libfreetype6-dev libjpeg62-turbo-dev libjpeg-dev libpng-dev libwebp-dev \
+    libgd-dev libmcrypt-dev bzip2 libmagickwand-dev libxpm-dev \
+    libbz2-dev libtidy-dev libcurl4-openssl-dev libmagick++-dev \
+    libz-dev libmemcached-dev libxslt-dev git-core libpq-dev libapache2-mod-auth-gssapi ntpdate\
+    libzip4 libzip-dev libwebp-dev \
+    #ssmtp \
+    python3 python3-venv libaugeas0 -y && \
+    python3 -m venv /opt/certbot/ && \
+    /opt/certbot/bin/pip install --upgrade pip && \
+    /opt/certbot/bin/pip install certbot certbot-apache && \
+    ln -s /opt/certbot/bin/certbot /usr/bin/certbot && \
+    rm -rf /var/lib/apt/lists/* \
+	&& localedef -i fr_FR -c -f UTF-8 -A /usr/share/locale/locale.alias fr_FR.UTF-8
+
+# localize en francais
+ENV LANG fr_FR.utf8
+
+# PHP Extensions
+#RUN docker-php-ext-install bcmath bz2 calendar dba exif gettext intl soap tidy xsl zip ldap &&\
+#    docker-php-ext-install mysqli pgsql pdo pdo_mysql pdo_pgsql  &&\
+#    docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp  &&\
+#    docker-php-ext-install gd &&\
+#    docker-php-ext-configure imap --with-kerberos --with-imap-ssl &&\
+#    docker-php-ext-install imap &&\
+#    docker-php-ext-configure hash --with-mhash &&\
+#RUN pecl install xdebug && docker-php-ext-enable xdebug &&\
+#    pecl install mongodb && docker-php-ext-enable mongodb &&\
+#    pecl install redis && docker-php-ext-enable redis
+
+#RUN docker-php-ext-install -j$(nproc) opcache
+
+RUN a2enmod rewrite remoteip cache rewrite ssl headers &&\
+    a2dissite 000-default
+
+#set timezone
+RUN ln -snf /usr/share/zoneinfo/America/Martinique /etc/localtime && echo America/Martinique > /etc/timezone 
+
+RUN apt-get update    
+RUN apt-get install -y apt-utils debconf-utils dialog
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+RUN echo "resolvconf resolvconf/linkify-resolvconf boolean false" | debconf-set-selections
+RUN apt-get update
+RUN apt-get install -y resolvconf
+
+RUN apt-get update -yq \
+    && apt-get install curl gnupg curl apt-transport-https wget htop git zip unzip nano ncdu build-essential chrpath libssl-dev libxft-dev pkg-config glib2.0-dev libexpat1-dev gobject-introspection python-gi-dev apt-transport-https libgirepository1.0-dev libtiff5-dev libjpeg-dev libgsf-1-dev fail2ban -yq \
+    && curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
+    && curl -sL https://deb.nodesource.com/setup_16.x | bash \
+    && apt-get install nodejs -yq
+
+RUN sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-bullseye-prod bullseye main" > /etc/apt/sources.list.d/microsoft.list'
+RUN apt-get update -yq && \
+    apt-get -y install \
+    dotnet-runtime-deps-2.1
+
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN systemctl enable sssd
+
+RUN mkdir -p /var/lib/samba/private
+
+RUN chmod 777 /home
+
+RUN env --unset=DEBIAN_FRONTEND
+
+
+
+# Configure /app folder with sample app && rm -fr /var/www/html && ln -s /app /var/www/html
+#RUN mkdir -p /app 
+
+#ADD app /app
+
+# Add volumes for the app 
+VOLUME  [ "/srv", "/src/www", "/src/projets" ]
+
+EXPOSE 137 138 139 443 445 80 3030
+
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+
+#COPY log.sh /log.sh
+
+RUN chmod +x /docker-entrypoint.sh
+#RUN chmod +x /log.sh
+
+
+COPY assets/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+
+WORKDIR /srv
+
+COPY 000-default.conf /opts/srv/000-default.conf
+
+
+COPY glpi.conf* /opts/srv/glpi.conf 
+
+#COPY HTTP_vvdecha.keytab /etc/krb5.keytab
+
+CMD ["/usr/bin/supervisord","-c","/etc/supervisor/conf.d/supervisord.conf"]
+
+
+
+
+

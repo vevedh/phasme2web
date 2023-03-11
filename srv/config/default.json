@@ -1,0 +1,70 @@
+{
+  "host": "localhost",
+  "port": "3030",
+  "public": "../www",
+  "adminfolder": "../www/",
+  "prj_folder": "../projets",
+  "admGroups": [
+    "Utilisateurs DSI"
+  ],
+  "origins": [
+    "http://localhost:3030"
+  ],
+  "mailTransport": {
+    "host": "mail.domain.fr",
+    "port": 587,
+    "secure": false,
+    "auth": {
+      "user": "notification@domain.fr",
+      "pass": "mailpassword"
+    },
+    "tls": {
+      "ciphers": "SSLv3"
+    }
+  },
+  "paginate": {
+    "default": 10,
+    "max": 50
+  },
+  "kerberos":{
+    "service":"HTTP@vvphasme.agglolab.local",
+    "fqdn":"vvphasme.agglolab.local"
+  },
+  "authentication": {
+    "entity": "user",
+    "service": "users",
+    "secret": "G-KaPdSgVkYp3s5v8y/B?E(H+MbQeThW",
+    "authStrategies": [
+      "jwt",
+      "local",
+      "ldap",
+      "sso",
+      "sso2"
+    ],
+    "jwtOptions": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://yourdomain.com",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "usernameField": "username",
+      "passwordField": "password"
+    },
+    "ldap": {
+      "name": "ldap",
+      "url": "ldap://dc11.agglolab.local:389",
+      "bindDN": "hdechavignyadm@AGGLOLAB.LOCAL",
+      "bindCredentials": "d@nZel!77",
+      "searchBase": "DC=AGGLOLAB,DC=LOCAL",
+      "searchFilter": "(|(uid={{username}})(sAMAccountName={{username}}))"
+    }
+  },
+  "dc":"dc11.agglolab.local",
+  "nedb": "../data",
+  "mongodb": "mongodb://admcacem:Cacem972@db:27017/cacemdb?authSource=admin"
+}
+

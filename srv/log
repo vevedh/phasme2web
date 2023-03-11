@@ -1,0 +1,674 @@
+--------------------------------------------------
+Change le /etc/resolv.conf
+--------------------------------------------------
+--------------------------------------------------
+Backing up current smb.conf
+--------------------------------------------------
+renamed '/etc/samba/smb.conf' -> '/etc/samba/smb.conf.original'
+--------------------------------------------------
+Setting Timezone configuration
+--------------------------------------------------
+America/Martinique
+
+Current default time zone: 'America/Martinique'
+Local time is now:      Wed Mar  8 19:17:04 AST 2023.
+Universal Time is now:  Wed Mar  8 23:17:04 UTC 2023.
+
+--------------------------------------------------
+Setting up Kerberos realm: "AGGLOLAB.LOCAL"
+--------------------------------------------------
+--------------------------------------------------
+Setting up guest user credential: "hdechavigny"
+--------------------------------------------------
+(2023-03-08 19:17:04:881014): [sss_cache] [confdb_get_enabled_domain_list] (0x0040): Failed to get [domains] from [sssd], error [2] (No such file or directory)
+(2023-03-08 19:17:04:881093): [sss_cache] [init_domains] (0x0020): Could not initialize domains
+(2023-03-08 19:17:05:011481): [sss_cache] [confdb_get_enabled_domain_list] (0x0040): Failed to get [domains] from [sssd], error [2] (No such file or directory)
+(2023-03-08 19:17:05:011813): [sss_cache] [init_domains] (0x0020): Could not initialize domains
+Unable to get new password.
+--------------------------------------------------
+ Starting system message bus
+--------------------------------------------------
+Starting system message bus: dbus.
+--------------------------------------------------
+Discovering domain specifications
+--------------------------------------------------
+ * Resolving: _ldap._tcp.dc11.agglolab.local
+ * Resolving: dc11.agglolab.local
+ * Performing LDAP DSE lookup on: 192.168.136.100
+ * Successfully discovered: AGGLOLAB.LOCAL
+AGGLOLAB.LOCAL
+  type: kerberos
+  realm-name: AGGLOLAB.LOCAL
+  domain-name: AGGLOLAB.LOCAL
+  configured: no
+  server-software: active-directory
+  client-software: sssd
+  required-package: sssd-tools
+  required-package: sssd
+  required-package: libnss-sss
+  required-package: libpam-sss
+  required-package: adcli
+  required-package: samba-common-bin
+--------------------------------------------------
+Joining domain: "agglolab.local"
+--------------------------------------------------
+ * Resolving: _ldap._tcp.dc11.agglolab.local
+ * Resolving: dc11.agglolab.local
+ * Performing LDAP DSE lookup on: 192.168.136.100
+ * Successfully discovered: AGGLOLAB.LOCAL
+Password for hdechavignyadm:  * Unconditionally checking packages
+ * Resolving required packages
+ * LANG=C /usr/sbin/adcli join --verbose --domain AGGLOLAB.LOCAL --domain-realm AGGLOLAB.LOCAL --domain-controller 192.168.136.100 --login-type user --login-user hdechavignyadm --stdin-password
+ * Using domain name: AGGLOLAB.LOCAL
+ * Calculated computer account name from fqdn: VVPHASME
+ * Using domain realm: AGGLOLAB.LOCAL
+ * Sending NetLogon ping to domain controller: 192.168.136.100
+ * Received NetLogon info from: DC11.AGGLOLAB.LOCAL
+ * Wrote out krb5.conf snippet to /var/cache/realmd/adcli-krb5-zCRha0/krb5.d/adcli-krb5-conf-thyIOX
+ * Authenticated as user: hdechavignyadm@AGGLOLAB.LOCAL
+ * Looked up short domain name: AGGLOLAB
+ * Looked up domain SID: S-1-5-21-3313190099-1236816210-4063137600
+ * Using fully qualified name: vvphasme.agglolab.local
+ * Using domain name: AGGLOLAB.LOCAL
+ * Using computer account name: VVPHASME
+ * Using domain realm: AGGLOLAB.LOCAL
+ * Calculated computer account name from fqdn: VVPHASME
+ * Generated 120 character computer password
+ * Using keytab: FILE:/etc/krb5.keytab
+ * Found computer account for VVPHASME$ at: CN=VVPHASME,CN=Computers,DC=AGGLOLAB,DC=LOCAL
+ * Sending NetLogon ping to domain controller: 192.168.136.100
+ * Received NetLogon info from: DC11.AGGLOLAB.LOCAL
+ * Set computer password
+ * Retrieved kvno '20' for computer account in directory: CN=VVPHASME,CN=Computers,DC=AGGLOLAB,DC=LOCAL
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Checking HTTPS/VVPHASME
+ *    Added HTTPS/VVPHASME
+ * Checking HTTPS/vvphasme.agglolab.local
+ *    Added HTTPS/vvphasme.agglolab.local
+ * Checking HTTP/VVPHASME
+ *    Added HTTP/VVPHASME
+ * Checking HTTP/vvphasme.agglolab.local
+ *    Added HTTP/vvphasme.agglolab.local
+ * Checking RestrictedKrbHost/vvphasme.agglolab.local
+ *    Added RestrictedKrbHost/vvphasme.agglolab.local
+ * Checking RestrictedKrbHost/VVPHASME
+ *    Added RestrictedKrbHost/VVPHASME
+ * Checking host/vvphasme.agglolab.local
+ *    Added host/vvphasme.agglolab.local
+ * Checking host/VVPHASME
+ *    Added host/VVPHASME
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Discovered which keytab salt to use
+ * Added the entries to the keytab: VVPHASME$@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Added the entries to the keytab: host/VVPHASME@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Added the entries to the keytab: host/vvphasme.agglolab.local@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Added the entries to the keytab: RestrictedKrbHost/VVPHASME@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Added the entries to the keytab: RestrictedKrbHost/vvphasme.agglolab.local@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Added the entries to the keytab: HTTPS/VVPHASME@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Added the entries to the keytab: HTTPS/vvphasme.agglolab.local@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Added the entries to the keytab: HTTP/VVPHASME@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Added the entries to the keytab: HTTP/vvphasme.agglolab.local@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * /usr/sbin/update-rc.d sssd enable
+ * /usr/sbin/service sssd restart
+ * Successfully enrolled machine in realm
+
+
+[sssd]
+domains = AGGLOLAB.LOCAL
+config_file_version = 2
+services = nss, pam
+
+[domain/AGGLOLAB.LOCAL]
+default_shell = /bin/bash
+ad_server = dc11.agglolab.local
+krb5_store_password_if_offline = True
+cache_credentials = True
+krb5_realm = AGGLOLAB.LOCAL
+realmd_tags = manages-system joined-with-adcli 
+id_provider = ad
+fallback_homedir = /home/%u@%d
+ad_domain = AGGLOLAB.LOCAL
+use_fully_qualified_names = True
+ldap_id_mapping = True
+access_provider = ad
+--------------------------------------------------
+Starting: "sssd"
+--------------------------------------------------
+sssd is running.
+--------------------------------------------------
+Activating home directory auto-creation
+--------------------------------------------------
+session required pam_mkhomedir.so skel=/etc/skel/ umask=0022
+--------------------------------------------------
+Generating Samba configuration: "/etc/samba/smb.conf"
+--------------------------------------------------
+--------------------------------------------------
+Updating NSSwitch configuration: "/etc/nsswitch.conf"
+--------------------------------------------------
+Updating NSSwitch...
+--------------------------------------------------
+Registering to Active Directory
+--------------------------------------------------
+DNS update failed: NT_STATUS_UNSUCCESSFUL
+Using short domain name -- AGGLOLAB
+Joined 'VVPHASME' to dns domain 'AGGLOLAB.LOCAL'
+-------------------------------------------------
+Fix DNS Record A 
+-------------------------------------------------
+---------------------------------------------------------------------
+Registering credential in /etc/krb5.keytab for HTTP and HTTPS
+-----------------------------------------------------------------------
+Processing principals to add...
+Enter hdechavignyadm@AGGLOLAB.LOCAL's password:
+Processing principals to add...
+Enter hdechavignyadm@AGGLOLAB.LOCAL's password:
+--------------------------------------------------
+Generating Kerberos ticket
+--------------------------------------------------
+Using default cache: /tmp/krb5cc_0
+Using principal: hdechavignyadm@AGGLOLAB.LOCAL
+Password for hdechavignyadm@AGGLOLAB.LOCAL: 
+Authenticated to Kerberos v5
+-------------------------------------------------
+PHP VERSION : PHP 8.2.3 (cli) (built: Feb 14 2023 16:53:07) (NTS)
+Copyright (c) The PHP Group
+Zend Engine v4.2.3, Copyright (c) Zend Technologies
+    with Zend OPcache v8.2.3, Copyright (c), by Zend Technologies-------------------------------------------------
+-------------------------------------------------
+PHPMODULES : [PHP Modules]
+calendar
+Core
+ctype
+date
+exif
+FFI
+fileinfo
+filter
+ftp
+gettext
+hash
+iconv
+json
+ldap
+libxml
+openssl
+pcntl
+pcre
+PDO
+Phar
+posix
+random
+readline
+Reflection
+session
+shmop
+sockets
+sodium
+SPL
+standard
+sysvmsg
+sysvsem
+sysvshm
+tokenizer
+Zend OPcache
+zlib
+
+[Zend Modules]
+Zend OPcache-------------------------------------------------
+--------------------------------------------------
+Configuration de composer
+--------------------------------------------------
+Installer verified
+All settings correct for using Composer
+Downloading...
+
+Composer (version 2.5.4) successfully installed to: /usr/local/bin/composer
+Use it: php /usr/local/bin/composer
+
+/docker-entrypoint.sh: line 348: /srv/src/vvphasme.agglolab.local.pem: No such file or directory
+--------------------------------------------------------
+Fichier de demande de certificat valid csr_details.txt
+--------------------------------------------------------
+--------------------------------------------------------
+Fichiers de cle privé vvphasme.key 
+--------------------------------------------------------
+--------------------------------------------------------
+Fichiers de CSR vvphasme.csr 
+--------------------------------------------------------
+Ignoring -days; not generating a certificate
+Generating a RSA private key
+.............................................................+++++
+.......................................................+++++
+writing new private key to 'vvphasme.key'
+-----
+--------------------------------------------------------
+Fichiers de cle privé vvphasme.key crée 
+--------------------------------------------------------
+--------------------------------------------------------
+Fichiers de CSR vvphasme.csr crée 
+--------------------------------------------------------
+--------------------------------------------------
+Status Samba to enable handling by supervisord
+--------------------------------------------------
+Stopping the Winbind daemon: winbind.
+Stopping NetBIOS name server: nmbd.
+Stopping SMB/CIFS daemon: smbd.
+-------------------------------------------------------
+Demarrage de application nodejs /srv ecoute port 3030
+-------------------------------------------------------
+--------------------------------------------------
+Exécuting feathersjs serveur ...
+--------------------------------------------------
+npm WARN lifecycle cacem-srv@0.0.0~postinstall: cannot run in wd cacem-srv@0.0.0 npmpd (wd=/srv)
+npm WARN @pnp/config-store@1.3.11 requires a peer of @pnp/common@1.3.11 but none is installed. You must install peer dependencies yourself.
+npm WARN @pnp/config-store@1.3.11 requires a peer of @pnp/sp@1.3.11 but none is installed. You must install peer dependencies yourself.
+npm WARN @pnp/config-store@1.3.11 requires a peer of @pnp/logging@1.3.11 but none is installed. You must install peer dependencies yourself.
+npm WARN @pnp/sp-addinhelpers@1.3.11 requires a peer of @pnp/common@1.3.11 but none is installed. You must install peer dependencies yourself.
+npm WARN @pnp/sp-addinhelpers@1.3.11 requires a peer of @pnp/sp@1.3.11 but none is installed. You must install peer dependencies yourself.
+npm WARN eslint-plugin-import@2.18.2 requires a peer of eslint@2.x - 6.x but none is installed. You must install peer dependencies yourself.
+npm WARN eslint-plugin-react@7.14.3 requires a peer of eslint@^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 but none is installed. You must install peer dependencies yourself.
+npm WARN feathers-mongoose@8.5.1 requires a peer of mongoose@>=6.0.11 but none is installed. You must install peer dependencies yourself.
+npm WARN mongoskin@2.1.0 requires a peer of mongodb@^2.0 but none is installed. You must install peer dependencies yourself.
+npm WARN pnp-auth@2.0.0 requires a peer of @pnp/logging-commonjs@2.x but none is installed. You must install peer dependencies yourself.
+npm WARN pnp-auth@2.0.0 requires a peer of @pnp/odata-commonjs@2.x but none is installed. You must install peer dependencies yourself.
+npm WARN pnp-auth@2.0.0 requires a peer of @pnp/sp-commonjs@2.x but none is installed. You must install peer dependencies yourself.
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.13 (node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.13: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.3.2 (node_modules/mjml-cli/node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.3.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.3.2 (node_modules/mocha/node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.3.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.3.2 (node_modules/jest-haste-map/node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.3.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.3.2 (node_modules/nodemon/node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.3.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.3.2 (node_modules/pm2/node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.3.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+
+audited 2015 packages in 7.591s
+
+157 packages are looking for funding
+  run `npm fund` for details
+
+found 126 vulnerabilities (15 low, 33 moderate, 58 high, 20 critical)
+  run `npm audit fix` to fix them, or `npm audit` for details
+
+> cacem-srv@0.0.0 start /srv
+> nodemon src/index.js
+
+[33m[nodemon] 2.0.15[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,json[39m
+[32m[nodemon] starting `node src/index.js`[39m
+/srv/node_modules/@feathersjs/hooks/script/base.js:71
+        this._middleware = middleware?.length ? middleware : null;
+                                      ^
+
+SyntaxError: Unexpected token '.'
+    at wrapSafe (internal/modules/cjs/loader.js:915:16)
+    at Module._compile (internal/modules/cjs/loader.js:963:27)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1027:10)
+    at Module.load (internal/modules/cjs/loader.js:863:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:708:14)
+    at Module.require (internal/modules/cjs/loader.js:887:19)
+    at require (internal/modules/cjs/helpers.js:74:18)
+    at Object.<anonymous> (/srv/node_modules/@feathersjs/hooks/script/index.js:14:19)
+    at Module._compile (internal/modules/cjs/loader.js:999:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1027:10)
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+--------------------------------------------------
+Change le /etc/resolv.conf
+--------------------------------------------------
+--------------------------------------------------
+Backing up current smb.conf
+--------------------------------------------------
+renamed '/etc/samba/smb.conf' -> '/etc/samba/smb.conf.original'
+--------------------------------------------------
+Setting Timezone configuration
+--------------------------------------------------
+America/Martinique
+
+Current default time zone: 'America/Martinique'
+Local time is now:      Wed Mar  8 19:25:18 AST 2023.
+Universal Time is now:  Wed Mar  8 23:25:18 UTC 2023.
+
+--------------------------------------------------
+Setting up Kerberos realm: "AGGLOLAB.LOCAL"
+--------------------------------------------------
+--------------------------------------------------
+Setting up guest user credential: "hdechavigny"
+--------------------------------------------------
+(2023-03-08 19:25:18:506461): [sss_cache] [confdb_get_enabled_domain_list] (0x0040): Failed to get [domains] from [sssd], error [2] (No such file or directory)
+(2023-03-08 19:25:18:506568): [sss_cache] [init_domains] (0x0020): Could not initialize domains
+(2023-03-08 19:25:18:606765): [sss_cache] [confdb_get_enabled_domain_list] (0x0040): Failed to get [domains] from [sssd], error [2] (No such file or directory)
+(2023-03-08 19:25:18:606880): [sss_cache] [init_domains] (0x0020): Could not initialize domains
+Unable to get new password.
+--------------------------------------------------
+ Starting system message bus
+--------------------------------------------------
+Starting system message bus: dbus.
+--------------------------------------------------
+Discovering domain specifications
+--------------------------------------------------
+ * Resolving: _ldap._tcp.dc11.agglolab.local
+ * Resolving: dc11.agglolab.local
+ * Performing LDAP DSE lookup on: 192.168.136.100
+ * Successfully discovered: AGGLOLAB.LOCAL
+AGGLOLAB.LOCAL
+  type: kerberos
+  realm-name: AGGLOLAB.LOCAL
+  domain-name: AGGLOLAB.LOCAL
+  configured: no
+  server-software: active-directory
+  client-software: sssd
+  required-package: sssd-tools
+  required-package: sssd
+  required-package: libnss-sss
+  required-package: libpam-sss
+  required-package: adcli
+  required-package: samba-common-bin
+--------------------------------------------------
+Joining domain: "agglolab.local"
+--------------------------------------------------
+ * Resolving: _ldap._tcp.dc11.agglolab.local
+ * Resolving: dc11.agglolab.local
+ * Performing LDAP DSE lookup on: 192.168.136.100
+ * Successfully discovered: AGGLOLAB.LOCAL
+Password for hdechavignyadm:  * Unconditionally checking packages
+ * Resolving required packages
+ * LANG=C /usr/sbin/adcli join --verbose --domain AGGLOLAB.LOCAL --domain-realm AGGLOLAB.LOCAL --domain-controller 192.168.136.100 --login-type user --login-user hdechavignyadm --stdin-password
+ * Using domain name: AGGLOLAB.LOCAL
+ * Calculated computer account name from fqdn: VVPHASME
+ * Using domain realm: AGGLOLAB.LOCAL
+ * Sending NetLogon ping to domain controller: 192.168.136.100
+ * Received NetLogon info from: DC11.AGGLOLAB.LOCAL
+ * Wrote out krb5.conf snippet to /var/cache/realmd/adcli-krb5-ailaE1/krb5.d/adcli-krb5-conf-EfoX6W
+ * Authenticated as user: hdechavignyadm@AGGLOLAB.LOCAL
+ * Looked up short domain name: AGGLOLAB
+ * Looked up domain SID: S-1-5-21-3313190099-1236816210-4063137600
+ * Using fully qualified name: vvphasme.agglolab.local
+ * Using domain name: AGGLOLAB.LOCAL
+ * Using computer account name: VVPHASME
+ * Using domain realm: AGGLOLAB.LOCAL
+ * Calculated computer account name from fqdn: VVPHASME
+ * Generated 120 character computer password
+ * Using keytab: FILE:/etc/krb5.keytab
+ * Found computer account for VVPHASME$ at: CN=VVPHASME,CN=Computers,DC=AGGLOLAB,DC=LOCAL
+ * Sending NetLogon ping to domain controller: 192.168.136.100
+ * Received NetLogon info from: DC11.AGGLOLAB.LOCAL
+ * Set computer password
+ * Retrieved kvno '22' for computer account in directory: CN=VVPHASME,CN=Computers,DC=AGGLOLAB,DC=LOCAL
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Checking HTTPS/VVPHASME
+ *    Added HTTPS/VVPHASME
+ * Checking HTTPS/vvphasme.agglolab.local
+ *    Added HTTPS/vvphasme.agglolab.local
+ * Checking HTTP/VVPHASME
+ *    Added HTTP/VVPHASME
+ * Checking HTTP/vvphasme.agglolab.local
+ *    Added HTTP/vvphasme.agglolab.local
+ * Checking RestrictedKrbHost/vvphasme.agglolab.local
+ *    Added RestrictedKrbHost/vvphasme.agglolab.local
+ * Checking RestrictedKrbHost/VVPHASME
+ *    Added RestrictedKrbHost/VVPHASME
+ * Checking host/vvphasme.agglolab.local
+ *    Added host/vvphasme.agglolab.local
+ * Checking host/VVPHASME
+ *    Added host/VVPHASME
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Discovered which keytab salt to use
+ * Added the entries to the keytab: VVPHASME$@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Added the entries to the keytab: host/VVPHASME@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Added the entries to the keytab: host/vvphasme.agglolab.local@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Added the entries to the keytab: RestrictedKrbHost/VVPHASME@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Added the entries to the keytab: RestrictedKrbHost/vvphasme.agglolab.local@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Added the entries to the keytab: HTTPS/VVPHASME@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Added the entries to the keytab: HTTPS/vvphasme.agglolab.local@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Added the entries to the keytab: HTTP/VVPHASME@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * Encryption type [1] not permitted.
+ * Encryption type [3] not permitted.
+ * Added the entries to the keytab: HTTP/vvphasme.agglolab.local@AGGLOLAB.LOCAL: FILE:/etc/krb5.keytab
+ * /usr/sbin/update-rc.d sssd enable
+ * /usr/sbin/service sssd restart
+ * Successfully enrolled machine in realm
+
+
+[sssd]
+domains = AGGLOLAB.LOCAL
+config_file_version = 2
+services = nss, pam
+
+[domain/AGGLOLAB.LOCAL]
+default_shell = /bin/bash
+ad_server = dc11.agglolab.local
+krb5_store_password_if_offline = True
+cache_credentials = True
+krb5_realm = AGGLOLAB.LOCAL
+realmd_tags = manages-system joined-with-adcli 
+id_provider = ad
+fallback_homedir = /home/%u@%d
+ad_domain = AGGLOLAB.LOCAL
+use_fully_qualified_names = True
+ldap_id_mapping = True
+access_provider = ad
+--------------------------------------------------
+Starting: "sssd"
+--------------------------------------------------
+sssd is running.
+--------------------------------------------------
+Activating home directory auto-creation
+--------------------------------------------------
+session required pam_mkhomedir.so skel=/etc/skel/ umask=0022
+--------------------------------------------------
+Generating Samba configuration: "/etc/samba/smb.conf"
+--------------------------------------------------
+--------------------------------------------------
+Updating NSSwitch configuration: "/etc/nsswitch.conf"
+--------------------------------------------------
+Updating NSSwitch...
+--------------------------------------------------
+Registering to Active Directory
+--------------------------------------------------
+DNS update failed: NT_STATUS_UNSUCCESSFUL
+Using short domain name -- AGGLOLAB
+Joined 'VVPHASME' to dns domain 'AGGLOLAB.LOCAL'
+-------------------------------------------------
+Fix DNS Record A 
+-------------------------------------------------
+---------------------------------------------------------------------
+Registering credential in /etc/krb5.keytab for HTTP and HTTPS
+-----------------------------------------------------------------------
+Processing principals to add...
+Enter hdechavignyadm@AGGLOLAB.LOCAL's password:
+Processing principals to add...
+Enter hdechavignyadm@AGGLOLAB.LOCAL's password:
+--------------------------------------------------
+Generating Kerberos ticket
+--------------------------------------------------
+Using default cache: /tmp/krb5cc_0
+Using principal: hdechavignyadm@AGGLOLAB.LOCAL
+Password for hdechavignyadm@AGGLOLAB.LOCAL: 
+-------------------------------------------------
+Authenticated to Kerberos v5
+PHP VERSION : PHP 8.2.3 (cli) (built: Feb 14 2023 16:53:07) (NTS)
+Copyright (c) The PHP Group
+Zend Engine v4.2.3, Copyright (c) Zend Technologies
+    with Zend OPcache v8.2.3, Copyright (c), by Zend Technologies-------------------------------------------------
+-------------------------------------------------
+PHPMODULES : [PHP Modules]
+calendar
+Core
+ctype
+date
+exif
+FFI
+fileinfo
+filter
+ftp
+gettext
+hash
+iconv
+json
+ldap
+libxml
+openssl
+pcntl
+pcre
+PDO
+Phar
+posix
+random
+readline
+Reflection
+session
+shmop
+sockets
+sodium
+SPL
+standard
+sysvmsg
+sysvsem
+sysvshm
+tokenizer
+Zend OPcache
+zlib
+
+[Zend Modules]
+Zend OPcache-------------------------------------------------
+--------------------------------------------------
+Configuration de composer
+--------------------------------------------------
+Installer verified
+All settings correct for using Composer
+Downloading...
+
+Composer (version 2.5.4) successfully installed to: /usr/local/bin/composer
+Use it: php /usr/local/bin/composer
+
+/docker-entrypoint.sh: line 348: /srv/src/vvphasme.agglolab.local.pem: No such file or directory
+--------------------------------------------------------
+Fichier de demande de certificat valid csr_details.txt
+--------------------------------------------------------
+--------------------------------------------------------
+Fichiers de cle privé vvphasme.key 
+--------------------------------------------------------
+--------------------------------------------------------
+Fichiers de CSR vvphasme.csr 
+--------------------------------------------------------
+Ignoring -days; not generating a certificate
+Generating a RSA private key
+..................................................................................................................................................+++++
+......................................................+++++
+writing new private key to 'vvphasme.key'
+-----
+--------------------------------------------------------
+Fichiers de cle privé vvphasme.key crée 
+--------------------------------------------------------
+--------------------------------------------------------
+Fichiers de CSR vvphasme.csr crée 
+--------------------------------------------------------
+--------------------------------------------------
+Status Samba to enable handling by supervisord
+--------------------------------------------------
+Stopping the Winbind daemon: winbind.
+Stopping NetBIOS name server: nmbd.
+Stopping SMB/CIFS daemon: smbd.
+-------------------------------------------------------
+Demarrage de application nodejs /srv ecoute port 3030
+-------------------------------------------------------
+--------------------------------------------------
+Exécuting feathersjs serveur ...
+--------------------------------------------------
+npm WARN lifecycle cacem-srv@0.0.0~postinstall: cannot run in wd cacem-srv@0.0.0 npmpd (wd=/srv)
+npm WARN @pnp/config-store@1.3.11 requires a peer of @pnp/common@1.3.11 but none is installed. You must install peer dependencies yourself.
+npm WARN @pnp/config-store@1.3.11 requires a peer of @pnp/sp@1.3.11 but none is installed. You must install peer dependencies yourself.
+npm WARN @pnp/config-store@1.3.11 requires a peer of @pnp/logging@1.3.11 but none is installed. You must install peer dependencies yourself.
+npm WARN @pnp/sp-addinhelpers@1.3.11 requires a peer of @pnp/common@1.3.11 but none is installed. You must install peer dependencies yourself.
+npm WARN @pnp/sp-addinhelpers@1.3.11 requires a peer of @pnp/sp@1.3.11 but none is installed. You must install peer dependencies yourself.
+npm WARN eslint-plugin-import@2.18.2 requires a peer of eslint@2.x - 6.x but none is installed. You must install peer dependencies yourself.
+npm WARN eslint-plugin-react@7.14.3 requires a peer of eslint@^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 but none is installed. You must install peer dependencies yourself.
+npm WARN feathers-mongoose@8.5.1 requires a peer of mongoose@>=6.0.11 but none is installed. You must install peer dependencies yourself.
+npm WARN mongoskin@2.1.0 requires a peer of mongodb@^2.0 but none is installed. You must install peer dependencies yourself.
+npm WARN pnp-auth@2.0.0 requires a peer of @pnp/logging-commonjs@2.x but none is installed. You must install peer dependencies yourself.
+npm WARN pnp-auth@2.0.0 requires a peer of @pnp/odata-commonjs@2.x but none is installed. You must install peer dependencies yourself.
+npm WARN pnp-auth@2.0.0 requires a peer of @pnp/sp-commonjs@2.x but none is installed. You must install peer dependencies yourself.
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.13 (node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.13: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.3.2 (node_modules/jest-haste-map/node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.3.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.3.2 (node_modules/mjml-cli/node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.3.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.3.2 (node_modules/mocha/node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.3.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.3.2 (node_modules/nodemon/node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.3.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.3.2 (node_modules/pm2/node_modules/fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.3.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"linux","arch":"x64"})
+
+audited 2015 packages in 8.168s
+
+157 packages are looking for funding
+  run `npm fund` for details
+
+found 126 vulnerabilities (15 low, 33 moderate, 58 high, 20 critical)
+  run `npm audit fix` to fix them, or `npm audit` for details
+
+> cacem-srv@0.0.0 start /srv
+> nodemon src/index.js
+
+[33m[nodemon] 2.0.15[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,json[39m
+[32m[nodemon] starting `node src/index.js`[39m
+/srv/node_modules/@feathersjs/hooks/script/base.js:71
+        this._middleware = middleware?.length ? middleware : null;
+                                      ^
+
+SyntaxError: Unexpected token '.'
+    at wrapSafe (internal/modules/cjs/loader.js:915:16)
+    at Module._compile (internal/modules/cjs/loader.js:963:27)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1027:10)
+    at Module.load (internal/modules/cjs/loader.js:863:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:708:14)
+    at Module.require (internal/modules/cjs/loader.js:887:19)
+    at require (internal/modules/cjs/helpers.js:74:18)
+    at Object.<anonymous> (/srv/node_modules/@feathersjs/hooks/script/index.js:14:19)
+    at Module._compile (internal/modules/cjs/loader.js:999:30)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1027:10)
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m

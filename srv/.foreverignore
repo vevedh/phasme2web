@@ -1,0 +1,14 @@
+/uploads
+/db-data
+/data
+/test
+node_modules
+/webadmin
+/infos.log
+/error.log
+/pwrshell
+/svradm
+/admerror.log
+/admout.log
+/info.log
+/out.log

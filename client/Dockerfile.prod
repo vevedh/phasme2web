@@ -1,0 +1,19 @@
+# build environment
+FROM node:12-slim as build
+WORKDIR /usr/src/app
+ENV PATH /usr/src/app/node_modules/.bin:$PATH
+COPY ./package.json ./
+COPY ./package-lock.json ./
+RUN npm ci --silent
+RUN npm install -g vue-cli && \
+    npm install @quasar/cli -g --silent
+COPY . .
+RUN quasar build -m spa
+
+# production environment
+FROM nginx:stable-alpine
+COPY --from=build /usr/src/app/build /usr/share/nginx/html
+COPY ./certs  /usr/share/nginx/certs
+COPY nginx.conf /etc/nginx/conf.d/nginx.conf
+EXPOSE 80 443
+CMD ["nginx", "-g", "daemon off;"]

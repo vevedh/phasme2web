@@ -1,0 +1,105 @@
+version: '3.3'
+
+services:
+
+    phasme-srv:
+      container_name: vvdecha-smb
+      build:
+        context: ./sssd/
+        dockerfile: Dockerfile
+      hostname: vvdecha-smb
+      extra_hosts:
+        - vvdecha-smb.agglo.local vvdecha-smb:172.30.151.1
+      expose:
+        - 3030
+        - 80
+        - 443
+      ports:
+        - "137:137"
+        - "138:138"
+        - "139:139"
+        - "4445:445"
+        - "443:443"
+        - "80:80"
+        - "3030:3030"
+      networks:
+        - db-net
+      depends_on:
+        - mongo
+      environment:
+        - TZ=America/Martinique
+        - IP_ADDRESS=172.30.151.1
+        - DOMAIN_NAME=agglo.local
+        - ADMIN_SERVER=dc11.agglo.local
+        - MONGODB_URL=mongodb://admcacem:Cacem972@mongo:27017/cacemdb?authSource=admin
+        - MONGO_BASENAME=cacemdb
+        - WORKGROUP=agglo
+        - AD_USERNAME=hdechavignyadm
+        - AD_PASSWORD=d@nZel!77
+        - CHOKIDAR_USEPOLLING=true
+      volumes:
+        - ./srv:/srv:rw
+        - ./client/www:/www
+        - /srv/node_modules
+
+
+
+
+
+    mongo:
+      image: mongo:latest
+      expose:
+        - 27019
+      ports:
+        - 27019:27017
+      networks:
+        - db-net
+      environment:
+        MONGO_INITDB_ROOT_USERNAME: admcacem
+        MONGO_INITDB_ROOT_PASSWORD: Cacem972    
+      volumes:
+        - ./data/mongod.conf:/etc/mongod.conf
+        - ./data/mongo/data:/data/db
+        
+    mongo-express:
+      image: mongo-express
+      restart: always
+      expose:
+        - 8081
+      ports:
+        - "8081:8081"
+      environment:
+        - ME_CONFIG_OPTIONS_EDITORTHEME=ambiance
+        - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+        - ME_CONFIG_BASICAUTH_USERNAME=admcacem
+        - ME_CONFIG_BASICAUTH_PASSWORD=Cacem972
+        - ME_CONFIG_MONGODB_URL=mongodb://admcacem:Cacem972@mongo:27017/cacemdb?authSource=admin
+      depends_on:
+        - mongo    
+      networks:
+        - db-net   
+
+    quasar-app:
+      container_name: docker-q-app
+      build:
+        context: ./client
+        dockerfile: Dockerfile
+      volumes:
+        - './client:/usr/src/app'
+        - '/usr/src/app/node_modules'
+      expose:
+        - 8080
+      environment:
+        - CHOKIDAR_USEPOLLING=true
+      ports: 
+        - "8080:8080"
+      depends_on:
+        - mongo
+      networks:
+        - db-net
+
+volumes:
+  app:
+
+networks:
+  db-net:

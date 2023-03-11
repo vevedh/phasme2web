@@ -1,0 +1,58 @@
+{
+  "host": "localhost",
+  "port": "3060",
+  "public": "../public/",
+  "adminfolder": "../www/",
+  "prj_folder": "C:\\Projets",
+  "admGroups": ["Utilisateurs DSI"],
+  "mailTransport": {
+    "host": "mail.cacem.fr",
+    "port": 587,
+    "secure": false,
+    "auth": {
+      "user": "herve.dechavigny@cacem.fr",
+      "pass": "Gdesch0ses@tedire"
+    },
+    "tls": {
+      "ciphers":"SSLv3"
+    }
+  },
+  "paginate": {
+    "default": 10,
+    "max": 50
+  },
+  "authentication": {
+    "entity": "user",
+    "service": "users",
+    "secret": "cm4sioYNmw7SKWhRQ2LlfKiYepE=",
+    "authStrategies": [
+      "jwt",
+      "local",
+      "ldap",
+      "sso"
+    ],
+    "jwtOptions": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://yourdomain.com",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "usernameField": "email",
+      "passwordField": "password"
+    },
+    "ldap": {
+      "name": "ldap",
+      "url": "ldap://agglo.local:389",
+      "bindDN": "",
+      "bindCredentials": "",
+      "searchBase": "DC=AGGLOLAB,DC=local",
+      "searchFilter": "(|(uid={{username}})(sAMAccountName={{username}}))"
+    }
+  },
+  "nedb": "../data",
+  "mongodb": "794f5479e64e08ec3f0551a7d0124a03|a7a2315cb39857c1e1fdfd9d72d64931144f1928452eb5a254062d69a25b538f0232340c3256023a4f0cd01646353b1c7233aee0cce339d01e05facffd94dbac"
+}

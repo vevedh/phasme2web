@@ -1,0 +1,59 @@
+version: '3.3'
+
+services:   
+    webapps-srv:
+      image: vevedh/phasme-srv:latest
+      hostname: webapps
+      extra_hosts:
+        - webapps.agglo.local webapps:172.30.249.209
+      ports:
+        - "137:137"
+        - "138:138"
+        - "139:139"
+        - "445:445"
+        - "443:443"
+        - "80:80"
+        - "3030:3030"
+      networks:
+        - dbnet
+      depends_on:
+        - mongo
+      environment:
+        - TZ=America/Martinique
+        - IP_ADDRESS=172.30.249.209
+        - DOMAIN_NAME=agglo.local
+        - ADMIN_SERVER=dc11.agglo.local
+        - MONGODB_URL=mongodb://admcacem:Cacem972@mongo:27017/cacemdb?authSource=admin
+        - MONGO_BASENAME=cacemdb
+        - WORKGROUP=agglo
+        - AD_USERNAME=hdechavignyadm
+        - AD_PASSWORD=d@nZel!77
+        - CHOKIDAR_USEPOLLING=true
+      volumes:
+        - projets:/srv/projets
+        - /phasme-srv/srv:/srv:rw
+        - /phasme-srv/srv/src:/srv/src:rw
+        - /phasme-srv/srv/node_modules
+        - /phasme-srv/clients/node_modules
+       
+
+    mongo:
+      image: mongo:latest
+      expose:
+        - 27019
+      ports:
+        - 27019:27017
+      networks:
+        - dbnet
+      environment:
+        MONGO_INITDB_ROOT_USERNAME: admcacem
+        MONGO_INITDB_ROOT_PASSWORD: Cacem972    
+      volumes:
+        - /phasme-srv/srv/mongod.conf:/etc/mongod.conf
+        - /phasme-srv/data/mongo/data:/data/db
+
+volumes:
+  projets:
+  www:
+networks:
+  dbnet:

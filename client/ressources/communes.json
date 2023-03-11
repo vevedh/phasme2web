@@ -1,0 +1,100 @@
+{
+  "communes": [
+    {
+      "name": "Basse-Pointe"
+    },
+    {
+      "name": "Bellefontaine"
+    },
+    {
+      "name": "Case-Pilote"
+    },
+    {
+      "name": "Ducos"
+    },
+    {
+      "name": "Fonds-Saint-Denis"
+    },
+    {
+      "name": "Fort-de-France"
+    },
+    {
+      "name": "Gros-Morne"
+    },
+    {
+      "name": "L'Ajoupa-Bouillon"
+    },
+    {
+      "name": "La Trinité"
+    },
+    {
+      "name": "Le Carbet"
+    },
+    {
+      "name": "Le Diamant"
+    },
+    {
+      "name": "Le François"
+    },
+    {
+      "name": "Le Lamentin"
+    },
+    {
+      "name": "Le Lorrain"
+    },
+    {
+      "name": "Le Marigot"
+    },
+    {
+      "name": "Le Marin"
+    },
+    {
+      "name": "Le Morne-Rouge"
+    },
+    {
+      "name": "Le Morne-Vert"
+    },
+    {
+      "name": "Le Prêcheur"
+    },
+    {
+      "name": "Le Robert"
+    },
+    {
+      "name": "Le Vauclin"
+    },
+    {
+      "name": "Les Anses-d'Arlets"
+    },
+    {
+      "name": "Les Trois-Îlets"
+    },
+    {
+      "name": "Macouba"
+    },
+    {
+      "name": "Rivière-Pilote"
+    },
+    {
+      "name": "Rivière-Salée"
+    },
+    {
+      "name": "Saint-Esprit"
+    },
+    {
+      "name": "Saint-Joseph"
+    },
+    {
+      "name": "Saint-Pierre"
+    },
+    {
+      "name": "Sainte-Anne"
+    },
+    {
+      "name": "Sainte-Marie"
+    },
+    {
+      "name": "Schœlcher"
+    }
+  ]
+}
